@@ -23,6 +23,8 @@ void gameInterface::gameStart(){
     if (entity.getGameMode() == PVE){
         who leader = whoLeadsMenu();
         entity.setLeader(leader);
+    }else{
+        entity.setLeader(PLAYER1);
     }
 
     // gameInitiate
@@ -50,7 +52,13 @@ gameMode gameInterface::modeMenu(){
     cout << "2.Play with AI" << endl;
     cout << "--------------" << endl;
     cout << "Input a number to choose: ";
-    gameMode mode = PVE;
+    int choice;
+    cin >> choice;
+    gameMode mode;
+    if (choice == 1)
+        mode = PVP;
+    else if (choice == 2)
+        mode = PVE;
 
     return mode;
 }
