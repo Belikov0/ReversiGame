@@ -15,7 +15,11 @@ public:
     ~gamePlayer();
 
     void setPlayer(who);
-    who getPlayer();
+    who getPlayer()const;
+
+    bool operator== (const gamePlayer p){
+        return this->getPlayer() == p.getPlayer();
+    }
 
 };
 
