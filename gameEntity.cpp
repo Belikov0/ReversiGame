@@ -6,12 +6,9 @@ using namespace std;
 
 gamePlayer gameEntity::gameOpen(){
     initBoard();
-
     while (1){
-        /*
-            如果是AI
-        */
         bool res = isAI(getCurrentPlayer());
+        getCanPlace();
         if (!res){
             showCurrentPlayer();
             cuePlayer();
@@ -25,16 +22,14 @@ gamePlayer gameEntity::gameOpen(){
         }
         placeStone(_pos);
         doReverse(_pos);
+
+        gamePlayer next = getNextPlayer(curr);
+        setNextPlayer(next);
         if (isGameOver()){
             return getWinner();
-        }else{
-            gamePlayer next = getNextPlayer(curr);
-            setNextPlayer(next);
         }
     }
 
-    gamePlayer winner;
-    return winner;
 }
 
 void gameEntity::initBoard(){
@@ -95,3 +90,87 @@ void gameEntity::setLeader(who _leader){
     }
     setCurrentPlayer(P1);
 }
+
+void gameEntity::recordLastStep(pos _pos){
+
+}
+
+bool gameEntity::isAI(gamePlayer _player){
+    return (_player.getPlayer() == AI);
+}
+
+void gameEntity::showCurrentPlayer(){
+    string s;
+    if (getCurrentPlayer() == P1)
+        s = "P1 PLAYER";
+    else    
+        s = "P2 PLAYER";
+
+    cout << "Current Player: " << s << endl;
+} 
+
+void gameEntity::getCanPlace(){
+    cues.clear();
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 8; j++){
+            if (canPlace({i, j})){
+                cues.insert({i,j});
+                board[i][j] = '*';
+            }
+        }
+    }
+}
+
+void gameEntity::cuePlayer(){
+    for (auto it = cues.begin(); it != cues.end(); it++){
+        pos _pos = (*it);
+        board[_pos.first][_pos.second] = '*';
+    }
+}
+
+void gameEntity::showBoard(){
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 8; j++){
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void gameEntity::placeStone(pos _pos){
+    char st = (P1 == getCurrentPlayer()) ? 'B' : 'W';
+    board[_pos.first][_pos.second] = st;
+    step++;
+    //消除提示
+    if (curr.getPlayer() != AI){
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if (board[i][j] == '*')
+                    board[i][j] = 'O';
+            }
+        }
+    }
+}
+
+void gameEntity::doReverse(pos _pos){
+
+}
+
+bool gameEntity::isGameOver(){
+    bool ans1 = true; //检测是否已满
+    if (step < 60)
+        ans1 = false;
+
+    bool ans2 = false; //检测是否双方都不能下
+    if (cues.empty()){
+        gamePlayer temp = curr;
+        setNextPlayer(getNextPlayer(curr));
+        getCanPlace();
+        if (cues.empty())
+            ans2 = true;
+        setNextPlayer(temp);
+    }
+
+    return (ans1 || ans2);
+}
+

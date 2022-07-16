@@ -23,6 +23,7 @@ public:
     who whoLeadsMenu();
     /*
         当为PVE时，选择先手方
+        将选择的先手方返回给选择先手方逻辑，设置entity中的先手方
     */
 
     void gameOverMenu(who);

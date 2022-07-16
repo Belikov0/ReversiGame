@@ -64,7 +64,17 @@ gameMode gameInterface::modeMenu(){
 }
 
 who gameInterface::whoLeadsMenu(){
-
+    cout << "Choose who to play first" << endl;
+    cout << "Player" << endl;
+    cout << "AI" << endl;
+    cout << "-------------" << endl;
+    cout << "Input a number to choose: " << endl;
+    int choice;
+    cin >> choice;
+    if (choice == 1)
+        return PLAYER1;
+    else
+        return AI;
 }
 
 void gameInterface::gameOverMenu(who winner){
